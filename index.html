@@ -12,23 +12,13 @@ html {
 }
 
 body {
-    /* iphone 5
-    padding: 16px 8px;
-     */
-
-    /* iphone 6 */
     padding: 16px 12px;
-
-    /* ipad portrait and higher
-    padding: 24px;
-     */
-
     margin: 0;
     font-family: sans-serif;
 }
 
 .page-container {
-    max-width: 760px;
+    max-width: 600px;
     margin: 0 auto;
 }
 
@@ -41,7 +31,7 @@ h1 {
     font-size: 32px;
     font-weight: 300;
     text-align: center;
-    margin: 0 0 24px 0;
+    margin: 16px 0 32px 0;
 }
 
 h2 {
@@ -75,7 +65,7 @@ select {
 
 input[disabled] {
     border: none;
-    background-color: #f2f2f2;
+    background-color: #ded8d8; /* bfb5b5; */
     color: #000;
     opacity: 1.0;
 }
@@ -87,15 +77,10 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 th {
-    /* iphone 5
-    padding: 12px 4px;
-    font-size: 14px;
-    */
-
     /* iphone 6 */
     padding: 12px 8px;
     font-size: 16px;
-    background-color: #ccc;
+    background-color: #bfb5b5; /* bfb5b5 */
     text-align: center;
 }
 
@@ -105,15 +90,10 @@ td:first-child {
 }
 
 td {
-    /* iphone 5
-    padding: 8px 4px;
-    font-size: 14px;
-    */
-
     /* iphone 6 */
     padding: 8px;
     font-size: 16px;
-    background-color: #f2f2f2;
+    background-color: #ded8d8; /* bfb5b5 d8cccc ded6d6 f7e9e9 */
 }
 
 td:first-child {
@@ -201,12 +181,12 @@ button:hover {
     }
 
     th {
-        padding: 12px 4px;
+        /* padding: 12px 4px; */
         font-size: 14px;
     }
 
     td {
-        padding: 8px 4px;
+        /* padding: 8px 4px; */
         font-size: 14px;
     }
 
@@ -229,6 +209,8 @@ button:hover {
         padding: 16px;
     }
 
+    /* h1 { margin-top: 16px; } */
+
 }
 
 /* ipad landscape */
@@ -238,9 +220,9 @@ button:hover {
         padding: 16px 0;
     }
 
-    h1 {
+    /* h1 {
         margin-bottom: 32px;
-    }
+    } */
 
     .page-container {
         max-width: 100%;
@@ -250,7 +232,7 @@ button:hover {
     .weight-section,
     .cg-limits-section {
         box-sizing: border-box;
-        padding: 0 16px 24px 16px;
+        padding: 0 24px;
         float: left;
         width: 50%;
     }
@@ -258,9 +240,11 @@ button:hover {
 
 
 /* ipad landscape */
-@media (min-width: 1150px) {
-    body {
-        padding: 16px;
+@media (min-width: 1200px) {
+
+    .page-container {
+        max-width: 1200px;
+        margin: 0 auto;
     }
 }
 </style>
@@ -371,18 +355,18 @@ button:hover {
                     </tr>
                     <tr>
                         <td style="text-align: right">Total weight</td>
-                        <td><input type="text" id="total-weight" disabled value="" style="background-color: yellow" /></td>
+                        <td><input type="text" id="total-weight" disabled value="" style="background-color: #f2f2f2" /></td>
                         <td style="text-align: right">
                             <strong>Total moment</strong>
                         </td>
                         <td>
-                            <input type="text" id="total-moment" disabled  value="" style="background-color: yellow" />
+                            <input type="text" id="total-moment" disabled  value="" style="background-color: #f2f2f2" />
                         </td>
                     </tr>
                 </tbody>
             </table>
 
-            <div class="info-panel" style="background-color: yellow;">
+            <div class="info-panel" style="background-color: #f2f2f2;">
                 Total aircraft weight is <strong id="total-weight-text"></strong> pounds.<br/>
                 C.G. is located <strong id="total-moment-text"></strong> inches aft of datum.
             </div>
@@ -406,7 +390,7 @@ button:hover {
             <div class="info-panel" style="background-color: #47cf73;">If the blue dot is inside the green area of the chart the aircraft's centre of gravity is within limits.
             </div>
 
-            <div class="info-panel" style="background-color: red;">If the blue dot is <strong>outside the green area</strong> of the chart the centre of gravity is <strong>outside limits</strong> and the <strong>aircraft should not be flown.</strong>
+            <div class="info-panel" style="background-color: #ea8383;">If the blue dot is <strong>outside the green area</strong> of the chart the centre of gravity is <strong>outside limits</strong> and the <strong>aircraft should not be flown.</strong>
             </div>
 
             <div class="info-panel" style="background-color: #f2f2f2;">
@@ -539,17 +523,17 @@ button:hover {
         var momentInputIds = ["basic-moment", "fuel-moment", "seat1-moment", "seat2-moment", "baggage-area1-moment", "baggage-area2-moment"]
         var totalWeight = 0;
         var totalMoment = 0;
+
         for (var i = 0; i < weightInputIds.length; i++) {
             totalWeight = totalWeight + Number(state[weightInputIds[i]] || 0);
         }
         for (var i = 0; i < momentInputIds.length; i++) {
             totalMoment = totalMoment + Number(state[momentInputIds[i]] || 0);
         }
+
         state["total-moment"] = totalMoment;
         state["total-weight"] = Math.ceil(totalWeight);
         state["cg"] = totalMoment === 0 && totalWeight === 0 ? 0 : totalMoment / Math.ceil(totalWeight);
-
-        // console.log("ST = ", state)
 
         document.getElementById("total-weight").value = state["total-weight"];
         document.getElementById("total-moment").value = state["total-moment"];
@@ -566,30 +550,18 @@ button:hover {
         {cg: 36.5, weight: 1000}
     ];
 
-    //////////////////////////////////////////////
-    // Chart Config /////////////////////////////
-    //////////////////////////////////////////////
-
-    var chartHeight = 500;
+    var chartHeight = 480;
 
     // Set the dimensions of the canvas / graph
     var margin = { top: 20, right: 20, bottom: 20, left: 60 },
-        width, // width gets defined below
-        height = chartHeight - margin.top - margin.bottom,
-        maxSingleColumnWidth = 760,
-        splitLayoutWidth = 900;
+        height = chartHeight - margin.top - margin.bottom;
 
-    // Set the scales ranges
-    var xScale = d3.scaleLinear().range([width, 0]);
+    var chartContainerWidth = parseInt(d3.select('.chart-container').style('width'), 10);
+    var xScale = d3.scaleLinear().range([chartContainerWidth, 0]);
     var yScale = d3.scaleLinear().range([height, 0]);
-
-    // Define the axes
     var xAxis = d3.axisBottom().scale(xScale).tickValues([30, 31, 32, 33, 34, 35, 36, 37]);
     var yAxis = d3.axisLeft().scale(yScale);
-
-    // create a line denoting c of g area
     var line = d3.line();
-
     // append svg element to dom
     var svg = d3.select(".chart-container")
                 .append("svg")
@@ -597,7 +569,7 @@ button:hover {
 
     var artboard = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-    // set the domain range from the data
+    // set the x and y axis domain range from the data
     xScale.domain([
         d3.min(data, function(d) { return 30.0; }),
         d3.max(data, function(d) { return 37.0; })
@@ -615,23 +587,10 @@ button:hover {
                         .style('stroke', 'steelblue')
                         .style('stroke-width', '1px');
 
-    // Add the X Axis
     var xAxisEl = artboard.append("g").attr("transform", "translate(0," + height + ")");
-
-    // Add the Y Axis
-    // we aren't resizing height in this demo so the yAxis stays static, we don't need to call this every resize
     var yAxisEl = artboard.append("g").call(yAxis);
 
     function addChartAxisLabels() {
-        // x axis label
-        // svg.append("text")
-        // .attr("x", 200)
-        // .attr("x", width / 2)
-        // .attr("y", chartHeight - 10)
-        // .attr("class", "axis-label")
-        // .text("Airplane C.G. location (inches aft of datum)");
-
-        // y axis label
         svg.append("text")
             .attr("transform", "rotate(-90)")
             .attr("y", 16)
@@ -643,36 +602,23 @@ button:hover {
 
     function drawChart() {
         // reset the width
-        width = parseInt(d3.select('.page-container').style('width'), 10) - margin.left - margin.right;
-// console.log("width before = ", width)
-        if(width > splitLayoutWidth) {
-            width = (Math.floor(width / 2) - 64);
-            // height = 360;
-        }
-        else if (width > maxSingleColumnWidth) {
-            width = maxSingleColumnWidth - 64;
-        }
-
-// console.log("width after = ", width)
-
+        chartContainerWidth = parseInt(d3.select('.chart-container').style('width'), 10);
+// console.log("cahart container width before = ", chartContainerWidth)
         // set the svg dimensions
-        svg.attr("width", width + margin.left + margin.right);
-
+        svg.attr("width", chartContainerWidth); // + margin.left + margin.right);
+        // svg.attr("width", width + margin.left + margin.right);
+        var chartXaxisWidth = chartContainerWidth - margin.left - margin.right;
         // Set new range for xScale
-        xScale.range([0, width]);
-
+        xScale.range([0, chartXaxisWidth]);
         // give the x axis the resized scale
         xAxis.scale(xScale);
-
         // draw the new xAxis
         xAxisEl.call(xAxis);
-
         // assign x and y axis scale values
         line.x(function(d) { return xScale(d.cg); })
             .y(function(d) { return yScale(d.weight); });
         path.attr('d', line);
-
-        // select
+        // position circle point svg
         svg.select("circle")
             .attr("cx", xScale(state.cg) + margin.left)
             .attr("cy", yScale(state["total-weight"]) + margin.top)
@@ -698,8 +644,7 @@ button:hover {
         calculateTotalWeightAndMoment();
         drawChart();
         addChartAxisLabels();
-
-        // add cg marker point to chart
+        // add cg marker circle to chart
         svg.append("circle")
             .attr("cx", xScale(state.cg) + margin.left)
             .attr("cy", yScale(state["total-weight"]) + margin.top)
