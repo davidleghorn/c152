@@ -292,7 +292,7 @@ button:hover {
                     </tr>
                     <tr>
                         <td>Fuel weight</td>
-                        <td><input type="number" id="fuel-weight" value="" data-prefix="fuel" /></td>
+                        <td><input type="number" id="fuel-weight" min="0" max="147" value="" data-prefix="fuel" /></td>
                         <td>
                             <input type="number" id="fuel-arm" value="" data-prefix="fuel" />
                         </td>
@@ -402,8 +402,8 @@ button:hover {
     var aircraft = {
         "default": {
             basicEmptyWeight: 0,
-            moment: 0,
-            leverArm: 0,
+            basicMoment: 0,
+            basicLeverArm: 0,
             fuelLeverArm: 0,
             seatArm: 39,
             baggageArea1Arm: 64,
@@ -411,8 +411,8 @@ button:hover {
         },
         "G-BSDO": {
             basicEmptyWeight: 1213,
-            moment: 37096,
-            leverArm: 30.58,
+            basicMoment: 37096,
+            basicLeverArm: 30.58,
             fuelLeverArm: 42.0,
             seatArm: 39,
             baggageArea1Arm: 64,
@@ -420,8 +420,8 @@ button:hover {
         },
         "G-BNJH": {
             basicEmptyWeight: 1213,
-            moment: 37096,
-            leverArm: 30.58,
+            basicMoment: 37096,
+            basicLeverArm: 30.58,
             fuelLeverArm: 42,
             seatArm: 39,
             baggageArea1Arm: 64,
@@ -431,8 +431,8 @@ button:hover {
 
     var state = {
         "basic-weight": aircraft.default.basicEmptyWeight,
-        "basic-arm": aircraft.default.leverArm,
-        "basic-moment": aircraft.default.moment,
+        "basic-arm": aircraft.default.basicLeverArm,
+        "basic-moment": aircraft.default.basicMoment,
 
         "fuel-weight": 0,
         "fuel-arm": aircraft.default.fuelLeverArm,
@@ -462,10 +462,10 @@ button:hover {
 
     function onChangeAircraftSelection(e) {
         var selectedAircraft = aircraft[e.target.value];
-
+        
         state["basic-weight"] = selectedAircraft.basicEmptyWeight || 0;
-        state["basic-arm"] = selectedAircraft.leverArm || 0;
-        state["basic-moment"] = selectedAircraft.moment || 0;
+        state["basic-arm"] = selectedAircraft.basicLeverArm || 0;
+        state["basic-moment"] = selectedAircraft.basicMoment || 0;
         state["fuel-arm"] = selectedAircraft.fuelLeverArm || 0;
         state["seat1-arm"] = selectedAircraft.seatArm || 0;
         state["seat2-arm"] = selectedAircraft.seatArm || 0;
@@ -481,12 +481,22 @@ button:hover {
         basicArmInput.value = state["basic-arm"];
         basicMomentInput.value = state["basic-moment"];
         fuelArmInput.value = state["fuel-arm"];
+        document.getElementById("seat1-arm").value = state["seat1-arm"];
+        document.getElementById("seat2-arm").value = state["seat2-arm"];
+        document.getElementById("baggage-area1-arm").value = state["baggage-area1-arm"];
+        document.getElementById("baggage-area2-arm").value = state["baggage-area2-arm"];
 
         var basicWeightInputsAreDisabled = e.target.value !== "default";
         basicWeightInput.disabled = basicWeightInputsAreDisabled;
         basicArmInput.disabled = basicWeightInputsAreDisabled;
         fuelArmInput.disabled = basicWeightInputsAreDisabled;
 
+        calculateItemMoment("basic");
+        calculateItemMoment("fuel");
+        calculateItemMoment("seat1");
+        calculateItemMoment("seat2");
+        calculateItemMoment("baggage-area1");
+        calculateItemMoment("baggage-area2");
         calculateTotalWeightAndMoment();
         drawChart();
     }
@@ -604,8 +614,8 @@ button:hover {
 
     function setDefaultState() {
         state["basic-weight"] = aircraft.default.basicEmptyWeight,
-        state["basic-arm"] = aircraft.default.leverArm,
-        state["basic-moment"] = aircraft.default.moment,
+        state["basic-arm"] = aircraft.default.basicLeverArm,
+        state["basic-moment"] = aircraft.default.basicMoment,
         state["fuel-arm"] = aircraft.default.fuelLeverArm,
         document.getElementById("basic-weight").value = state["basic-weight"];
         document.getElementById("basic-arm").value = state["basic-arm"];
