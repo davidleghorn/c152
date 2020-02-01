@@ -251,7 +251,7 @@ button:hover {
                 Select an aircraft to automatically populate it's basic weight values.
             </div>
 
-            <select name="aircraft-select" style="margin-bottom: 24px">
+            <select name="aircraft-select" id="aircraft-select" style="margin-bottom: 24px">
                 <option value="default">Select aircraft (optional)</option>
                 <option value="G-BSDO">G-BSDO</option>
                 <!-- <option value="G-BNJH">G-BNJH</option> -->
@@ -459,41 +459,43 @@ button:hover {
         "cg": 0
     };
 
-    function onChangeInput(e) {
+
+    function onChangeAircraftSelection(e) {
+        var selectedAircraft = aircraft[e.target.value];
+
+        state["basic-weight"] = selectedAircraft.basicEmptyWeight || 0;
+        state["basic-arm"] = selectedAircraft.leverArm || 0;
+        state["basic-moment"] = selectedAircraft.moment || 0;
+        state["fuel-arm"] = selectedAircraft.fuelLeverArm || 0;
+        state["seat1-arm"] = selectedAircraft.seatArm || 0;
+        state["seat2-arm"] = selectedAircraft.seatArm || 0;
+        state["baggage-area1-arm"] = selectedAircraft.baggageArea1Arm || 0;
+        state["baggage-area2-arm"] = selectedAircraft.baggageArea2Arm || 0;
+
+        var basicWeightInput = document.getElementById("basic-weight");
+        var basicMomentInput = document.getElementById("basic-moment");
+        var basicArmInput = document.getElementById("basic-arm");
+        var fuelArmInput = document.getElementById("fuel-arm");
+
+        basicWeightInput.value = state["basic-weight"];
+        basicArmInput.value = state["basic-arm"];
+        basicMomentInput.value = state["basic-moment"];
+        fuelArmInput.value = state["fuel-arm"];
+
+        var basicWeightInputsAreDisabled = e.target.value !== "default";
+        basicWeightInput.disabled = basicWeightInputsAreDisabled;
+        basicArmInput.disabled = basicWeightInputsAreDisabled;
+        fuelArmInput.disabled = basicWeightInputsAreDisabled;
+
+        calculateTotalWeightAndMoment();
+        drawChart();
+    }
+
+    function onKeyUp(e) {
         var input = e.target;
-        if (input.name === "aircraft-select") {  // <select> value changed
-            var selectedAircraft = aircraft[input.value];
-
-            state["basic-weight"] = selectedAircraft.basicEmptyWeight || 0;
-            state["basic-arm"] = selectedAircraft.leverArm || 0;
-            state["basic-moment"] = selectedAircraft.moment || 0;
-            state["fuel-arm"] = selectedAircraft.fuelLeverArm || 0;
-            state["seat1-arm"] = selectedAircraft.seatArm || 0;
-            state["seat2-arm"] = selectedAircraft.seatArm || 0;
-            state["baggage-area1-arm"] = selectedAircraft.baggageArea1Arm || 0;
-            state["baggage-area2-arm"] = selectedAircraft.baggageArea2Arm || 0;
-
-            var basicWeightInput = document.getElementById("basic-weight");
-            var basicMomentInput = document.getElementById("basic-moment");
-            var basicArmInput = document.getElementById("basic-arm");
-            var fuelArmInput = document.getElementById("fuel-arm");
-
-            basicWeightInput.value = state["basic-weight"];
-            basicArmInput.value = state["basic-arm"];
-            basicMomentInput.value = state["basic-moment"];
-            fuelArmInput.value = state["fuel-arm"];
-
-            var basicWeightInputsAreDisabled = input.value !== "default";
-            basicWeightInput.disabled = basicWeightInputsAreDisabled;
-            basicArmInput.disabled = basicWeightInputsAreDisabled;
-            fuelArmInput.disabled = basicWeightInputsAreDisabled;
-        } else {  // <input> value changed
-            var prefix = input.getAttribute("data-prefix");
-            // TODO input validation
-            state[input.id] = input.value;
-            calculateItemMoment(prefix)
-        }
-
+        var prefix = input.getAttribute("data-prefix");
+        state[input.id] = (!input.value || isNaN(input.value))? 0 : input.value;
+        calculateItemMoment(prefix);
         calculateTotalWeightAndMoment();
         drawChart();
     }
@@ -528,7 +530,7 @@ button:hover {
         document.getElementById("total-moment-text").innerText = state["cg"].toString().substring(0,5);
     }
 
-    // CG envelope area data
+    // CG envelope line data points
     var data = [
         {cg: 31.0, weight: 1000},
         {cg: 31.0, weight: 1350},
@@ -537,26 +539,22 @@ button:hover {
         {cg: 36.5, weight: 1000}
     ];
 
+    // chart details
     var chartHeight = 480;
-
-    // Set the dimensions of the canvas / graph
     var margin = { top: 20, right: 20, bottom: 20, left: 60 },
         height = chartHeight - margin.top - margin.bottom;
-
     var chartContainerWidth = parseInt(d3.select('.chart-container').style('width'), 10);
     var xScale = d3.scaleLinear().range([chartContainerWidth, 0]);
     var yScale = d3.scaleLinear().range([height, 0]);
     var xAxis = d3.axisBottom().scale(xScale).tickValues([30, 31, 32, 33, 34, 35, 36, 37]);
     var yAxis = d3.axisLeft().scale(yScale);
     var line = d3.line();
-    // append svg element to dom
     var svg = d3.select(".chart-container")
                 .append("svg")
                 .attr("height", height + margin.top + margin.bottom);
 
     var artboard = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-    // set the x and y axis domain range from the data
     xScale.domain([
         d3.min(data, function(d) { return 30.0; }),
         d3.max(data, function(d) { return 37.0; })
@@ -567,7 +565,6 @@ button:hover {
         d3.max(data, function(d) { return 1800; })
     ]);
 
-    // draw the line created above
     var path = artboard.append("path")
                         .data([data])
                         .style('fill', '#47cf73')
@@ -576,24 +573,18 @@ button:hover {
 
     var xAxisEl = artboard.append("g").attr("transform", "translate(0," + height + ")");
     var yAxisEl = artboard.append("g").call(yAxis);
-
-    function addChartAxisLabels() {
-        svg.append("text")
-            .attr("transform", "rotate(-90)")
-            .attr("y", 16)
-            .attr("x", 0 - (chartHeight / 2))
-            .attr("class", "axis-label")
+    // append chart y axis label
+    svg.append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 16)
+        .attr("x", 0 - (chartHeight / 2))
+        .attr("class", "axis-label")
             .style("text-anchor", "middle")
             .text("Weight (pounds)");
-    }
 
     function drawChart() {
-        // reset the width
         chartContainerWidth = parseInt(d3.select('.chart-container').style('width'), 10);
-// console.log("cahart container width before = ", chartContainerWidth)
-        // set the svg dimensions
-        svg.attr("width", chartContainerWidth); // + margin.left + margin.right);
-        // svg.attr("width", width + margin.left + margin.right);
+        svg.attr("width", chartContainerWidth);
         var chartXaxisWidth = chartContainerWidth - margin.left - margin.right;
         // Set new range for xScale
         xScale.range([0, chartXaxisWidth]);
@@ -605,7 +596,7 @@ button:hover {
         line.x(function(d) { return xScale(d.cg); })
             .y(function(d) { return yScale(d.weight); });
         path.attr('d', line);
-        // position circle point svg
+        // position C.G. circle point svg
         svg.select("circle")
             .attr("cx", xScale(state.cg) + margin.left)
             .attr("cy", yScale(state["total-weight"]) + margin.top)
@@ -630,7 +621,6 @@ button:hover {
         setDefaultState();
         calculateTotalWeightAndMoment();
         drawChart();
-        addChartAxisLabels();
         // add cg marker circle to chart
         svg.append("circle")
             .attr("cx", xScale(state.cg) + margin.left)
@@ -639,7 +629,8 @@ button:hover {
     }
 
     window.addEventListener('resize', drawChart);
-    window.addEventListener('change', onChangeInput);
+    document.getElementById("aircraft-select").addEventListener('change', onChangeAircraftSelection);
+    document.querySelector("table").addEventListener('keyup', onKeyUp);
 
     init();
 
