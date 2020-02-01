@@ -78,6 +78,10 @@ input[type=number]::-webkit-outer-spin-button {
     margin: 0;
 }
 
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
 th {
     /* iphone 6 */
     padding: 12px 8px;
@@ -462,7 +466,7 @@ button:hover {
 
     function onChangeAircraftSelection(e) {
         var selectedAircraft = aircraft[e.target.value];
-        
+
         state["basic-weight"] = selectedAircraft.basicEmptyWeight || 0;
         state["basic-arm"] = selectedAircraft.basicLeverArm || 0;
         state["basic-moment"] = selectedAircraft.basicMoment || 0;
@@ -640,7 +644,7 @@ button:hover {
 
     window.addEventListener('resize', drawChart);
     document.getElementById("aircraft-select").addEventListener('change', onChangeAircraftSelection);
-    document.querySelector("table").addEventListener('keyup', onKeyUp);
+    document.querySelector("table").addEventListener('input', onKeyUp);
 
     init();
 
