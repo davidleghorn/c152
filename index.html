@@ -202,6 +202,10 @@ button:hover {
     body {
         padding: 16px;
     }
+
+    th:first-child {
+        min-width: 124px;
+    }
 }
 
 /* ipad landscape */
@@ -304,7 +308,7 @@ button:hover {
             <div class="no-print"><strong>Enter weight values in pounds (Ibs)</strong>
                 <!-- or <a href="#">use weight converter</a> -->
             </div>
-            <div class="info-panel weight-conversions no-print" style="background-color: #f2f2f2; padding: 8px 12px;">
+            <div class="info-panel weight-conversions no-print" style="background-color: #e8e1e1; padding: 8px 12px;">
                 <ul>
                     <li>1 US Gallon = 6 pounds</li>
                     <li>1Kg = 2.2 pounds</li>
@@ -386,18 +390,18 @@ button:hover {
                     </tr>
                     <tr>
                         <td style="text-align: right">Total weight</td>
-                        <td><input type="text" id="total-weight" disabled value="" style="background-color: #f2f2f2" /></td>
+                        <td><input type="text" id="total-weight" disabled value="" style="background-color: #e8e1e1" /></td>
                         <td style="text-align: right">
                             <strong>Total moment</strong>
                         </td>
                         <td>
-                            <input type="text" id="total-moment" disabled  value="" style="background-color: #f2f2f2" />
+                            <input type="text" id="total-moment" disabled  value="" style="background-color: #e8e1e1" />
                         </td>
                     </tr>
                 </tbody>
             </table>
 
-            <div class="info-panel" style="background-color: #f2f2f2;">
+            <div class="info-panel" style="background-color: #e8e1e1;">
                 Total aircraft weight is <strong id="total-weight-text"></strong> pounds. <br class="no-print" />
                 C.G. located <strong id="total-moment-text"></strong> inches aft of datum.
             </div>
@@ -424,7 +428,7 @@ button:hover {
             <div class="info-panel no-print" style="background-color: #ea8383;">If the blue dot is <strong>outside the green area</strong> of the chart the centre of gravity is <strong>outside limits</strong> and the <strong>aircraft should not be flown.</strong>
             </div>
 
-            <!-- <div class="info-panel" style="background-color: #f2f2f2;">
+            <!-- <div class="info-panel" style="background-color: #e8e1e1;">
                 <ul class="info-ul">
                     <li>Airplane C.G. location is calculated by dividing total moment by total weight.</li>
                     <li>Aircaft weight and lever arm values are from the aircraft weight & centre of gravity schedule found in the aircraft's tech log.
