@@ -90,23 +90,21 @@ th {
     font-size: 16px;
     background-color: #bfb5b5; /* bfb5b5 */
     text-align: center;
+    font-weight: 600;
 }
 
 th:first-child,
 td:first-child {
     text-align: left;
+    font-weight: 600;
 }
 
 td {
-    /* iphone 6 */
-    padding: 8px;
+    /* phone default padding */
+    padding: 12px 8px;
     font-size: 16px;
     background-color: #ded8d8; /* bfb5b5 d8cccc ded6d6 f7e9e9 */
 }
-
-/* td:first-child {
-    font-weight: bold;
-} */
 
 /* .weight-conversions {
     font-size: 13px;
@@ -180,7 +178,7 @@ button:hover {
     clear: both;
 }
 
-/* iphone 5 */
+/* iphone 5 & below */
 @media (max-width: 320px) {
 
     body {
@@ -190,16 +188,23 @@ button:hover {
     th, td, input {
         font-size: 14px;
     }
+
+    /* th, td {
+        padding: 12px 8px;
+    } */
 }
 
-/* iphone portrait */
-@media (max-width: 660px) {
+/* iphone se portrait width & below */
+@media (max-width: 560px) {
+
     h2 {
         text-align: center;
     }
+
 }
 
-@media (min-width: 660px) {
+/* iphone se portrait width and above */
+@media (min-width: 560px) {
 
     body {
         padding: 16px;
@@ -208,24 +213,24 @@ button:hover {
     th:first-child,
     td:first-child {
         min-width: 160px;
-        padding-left: 12px;
+        padding: 12px;
     }
 
     select {
-        padding-left: 12px;
+        padding: 0 0 0 12px;
     }
 }
 
-/* ipad landscape */
+/* ipad landscape & above */
 @media (min-width: 1020px) {
 
     body {
         padding: 16px 0;
     }
 
-    /* h1 {
-        margin-bottom: 32px;
-    } */
+    td {
+        padding: 12px 8px;
+    }
 
     .page-container {
         max-width: 100%;
@@ -239,10 +244,11 @@ button:hover {
         float: left;
         width: 50%;
     }
+
 }
 
 
-/* ipad landscape */
+/* above 1200 e.g. most laptop and ipad pro landscape */
 @media (min-width: 1200px) {
 
     .page-container {
@@ -263,11 +269,16 @@ button:hover {
 
     td, th {
         background-color: #fff;
+        padding: 6px;
     }
 
     th:first-child,
     td:first-child {
         width: 164px;
+        font-weight: bold;
+    }
+
+    th {
         font-weight: bold;
     }
 
